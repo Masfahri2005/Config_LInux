@@ -232,6 +232,137 @@ python3 --version
 docker --version
 ```
 
+### 9. **Additional Configuration (Bash Compatibility)**
+
+Create or update `~/.bashrc` with the following configuration for bash compatibility:
+
+```bash
+# Source global bashrc if it exists
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
+
+# User specific environment
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
+
+# User specific aliases and functions
+if [ -d ~/.bashrc.d ]; then
+    for rc in ~/.bashrc.d/*; do
+        if [ -f "$rc" ]; then
+            . "$rc"
+        fi
+    done
+fi
+unset rc
+
+# Load NVM (Node Version Manager)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Source custom environment variables
+. "$HOME/.local/bin/env"
+
+# SDKMAN configuration (MUST be at the end of the file)
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+```
+
+**Explanation:**
+- **Global bashrc sourcing**: Ensures system-wide bash settings are loaded
+- **PATH configuration**: Adds user-local binaries to PATH
+- **Bashrc.d directory**: Modular bash configuration files
+- **NVM integration**: Node.js version management
+- **Custom environment**: User-specific environment variables
+- **SDKMAN**: Java/Kotlin/Groovy SDK management (must be loaded last)
+
+### 10. **Neovim with LazyVim Installation**
+
+#### **Install Neovim**
+```bash
+# Install Neovim from official PPA (Ubuntu/Debian)
+sudo add-apt-repository ppa:neovim-ppa/unstable
+sudo apt update
+sudo apt install neovim
+
+# Or install via Homebrew
+brew install neovim
+
+# Or install from source
+sudo apt install -y ninja-build gettext cmake unzip curl
+git clone https://github.com/neovim/neovim
+cd neovim && make CMAKE_BUILD_TYPE=RelWithDebInfo
+sudo make install
+```
+
+#### **Install LazyVim**
+```bash
+# Backup existing Neovim configuration
+mv ~/.config/nvim ~/.config/nvim.bak
+mv ~/.local/share/nvim ~/.local/share/nvim.bak
+mv ~/.local/state/nvim ~/.local/state/nvim.bak
+mv ~/.cache/nvim ~/.cache/nvim.bak
+
+# Install LazyVim
+git clone https://github.com/LazyVim/starter ~/.config/nvim
+
+# Remove the .git folder to personalize your config
+rm -rf ~/.config/nvim/.git
+```
+
+#### **Configure LazyVim**
+```bash
+# Install lazygit (recommended for LazyVim)
+sudo add-apt-repository ppa:lazygit-team/release
+sudo apt update
+sudo apt install lazygit
+
+# Install tree-sitter CLI
+npm install -g tree-sitter-cli
+
+# Install ripgrep and fd (already installed in previous steps)
+# These are required for telescope plugin
+
+# Start Neovim and let LazyVim install plugins
+nvim
+```
+
+**First-time setup in Neovim:**
+1. LazyVim will automatically install all required plugins
+2. Press `Enter` when prompted to download Mason packages
+3. Wait for the installation to complete (may take 5-10 minutes)
+4. Restart Neovim after installation
+
+#### **Essential LazyVim Keybindings**
+```
+- `Space` + `s` + `f`: Find files with telescope
+- `Space` + `s` + `g`: Live grep with telescope
+- `Space` + `f` + `r`: Recent files
+- `Space` + `e`: File explorer (neo-tree)
+- `g` + `d`: Go to definition
+- `K`: Hover documentation
+- `Space` + `c` + `a`: Code actions
+- `Space` + `l` + `d`: Open LazyVim dashboard
+- `Space` + `L`: LazyVim plugin manager
+```
+
+#### **Install Language Servers via Mason**
+Inside Neovim:
+1. Press `Space` + `m`
+2. Navigate to language servers you need (e.g., typescript, php, python, lua)
+3. Press `i` to install
+
+Recommended language servers:
+- **TypeScript/JavaScript**: typescript-language-server
+- **PHP**: intelephense or phpactor
+- **Python**: pyright or jedi-language-server
+- **Lua**: lua-language-server
+- **HTML/CSS**: vscode-langservers-extracted
+- **JSON**: vscode-json-language-server
+
 ## ⚙️ Main Environment Features
 
 ### 🎨 **UI/UX Enhancement**
@@ -239,17 +370,21 @@ docker --version
 - **Eza**: File listing with icons and colors
 - **Bat**: File preview with syntax highlighting
 - **FZF**: Fuzzy finder for files and directories
+- **Neovim with LazyVim**: Modern IDE-like text editor with minimal configuration
 
 ### 🔧 **Development Tools**
 - **Multi-language support**: Node.js, PHP, Python, Java
 - **Package managers**: npm, bun, pnpm, composer, pip
 - **Database tools**: PostgreSQL, MongoDB
 - **Containerization**: Docker with useful aliases
+- **Version control**: Git with helpful aliases
+- **Text editor**: Neovim with LazyVim configuration
 
 ### ⚡ **Performance**
 - **Fast-syntax-highlighting**: Optimized highlighting for speed
 - **Zsh-autosuggestions**: Responsive suggestions
 - **Fzf-tab**: Fast and interactive tab completion
+- **LazyVim**: Fast startup with lazy-loaded plugins
 
 ### 📁 **Useful Aliases**
 - **File operations**: `ll`, `la`, `tree`, `lst`
@@ -257,3 +392,67 @@ docker --version
 - **Development**: `php artisan`, `npm run`, `bun run`
 - **Git**: `gs`, `ga`, `gco`, `gl`
 - **System**: `myip`, `ports`, `disk`, `cpu`
+- **Editor**: `nvim` or `vim` for Neovim
+
+## 🔧 Troubleshooting
+
+### Neovim/LazyVim Issues
+
+#### **1. LazyVim not loading properly**
+```bash
+# Reset LazyVim
+rm -rf ~/.config/nvim
+rm -rf ~/.local/share/nvim
+rm -rf ~/.local/state/nvim
+rm -rf ~/.cache/nvim
+
+# Reinstall
+git clone https://github.com/LazyVim/starter ~/.config/nvim
+```
+
+#### **2. Mason packages not installing**
+```bash
+# Check network connectivity
+nvim +Mason
+
+# Or install manually via command line
+:MasonInstall typescript-language-server python-lsp-server
+```
+
+#### **3. Tree-sitter parsing errors**
+```bash
+# Update tree-sitter parsers
+nvim +TSUpdate
+
+# Or manually update
+:MasonUpdate
+```
+
+### Environment Variable Conflicts
+
+If you encounter PATH conflicts between bash and zsh:
+```bash
+# Check current PATH
+echo $PATH
+
+# Compare bash and zsh PATHs
+bash -c 'echo $PATH'
+zsh -c 'echo $PATH'
+```
+
+## 📚 Additional Resources
+
+- [Neovim Documentation](https://neovim.io/doc/)
+- [LazyVim GitHub](https://github.com/LazyVim/LazyVim)
+- [LazyVim Configuration Guide](https://www.lazyvim.org/configuration)
+- [Mason.nvim Plugin Manager](https://github.com/williamboman/mason.nvim)
+
+## 🎯 Productivity Tips
+
+1. **Use Neovim terminal**: `:terminal` or `<C-\><C-n>` to navigate
+2. **LazyVim cheat sheet**: `:LazyCheatsheet` to see all keybindings
+3. **Quick file navigation**: `Space` + `s` + `f` in Neovim
+4. **Project management**: Use telescope to switch between projects
+5. **Debugging**: Install nvim-dap for debugging support
+
+This complete development environment provides a powerful, modern setup with ZSH for the shell, Neovim with LazyVim for editing, and all essential development tools. Happy coding! 🚀
