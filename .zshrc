@@ -58,6 +58,7 @@ alias home='cd ~'
 alias desk='cd ~/Desktop'
 alias docs='cd ~/Documents'
 alias dl='cd ~/Downloads'
+alias t='cd ~/Templates'
 alias mkdirp='mkdir -pv'
 alias rmf='rm -rf'
 alias c='clear'
@@ -136,6 +137,10 @@ alias gsave='git stash push -m'
 alias gpop='git stash pop'
 alias greset='git reset --hard'
 alias ghead='git rev-parse --abbrev-ref HEAD'
+alias gh-origin-m='f(){ git remote add origin git@github.com:Masfahri2005/$1.git }; f'
+alias gh-origin-f='f(){ git remote add origin git@github.com:Masfahri2005/$1.git }; f'
+alias gh-test='ssh -T git@github.com'
+alias gh-push-init='git push -u origin main'
 
 # Docker
 alias dps='docker ps'
@@ -165,6 +170,8 @@ alias reload='source ~/.zshrc'
 alias zedit='nano ~/.zshrc'
 alias zshrc='code ~/.zshrc'
 alias aliases='alias | sort'
+alias p10k='code ~/.p10k.zsh'
+alias alacritty='code ~/.config/alacritty/alacritty.toml '
 
 # PostgreSQL
 alias pgroot='psql -h 127.0.0.1 -U myuser -d postgres'
@@ -173,6 +180,14 @@ alias pgdb='psql -h 127.0.0.1 -U myuser'
 # MongoDB
 alias mongo-admin='mongosh -u admin -p --authenticationDatabase admin'
 alias mongo-local='mongosh'
+
+# MySQL
+alias mysql-user='mysql -u fakhrizal -p'
+alias mysql-root='mysql -u root -p'
+
+export FZF_DEFAULT_COMMAND='fd --hidden --exclude .git'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND='fd --type d'
 
 export FZF_DEFAULT_COMMAND='fd --hidden --exclude .git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
