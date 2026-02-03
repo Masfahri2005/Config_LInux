@@ -170,8 +170,7 @@ alias reload='source ~/.zshrc'
 alias zedit='nano ~/.zshrc'
 alias zshrc='code ~/.zshrc'
 alias aliases='alias | sort'
-alias p10k='code ~/.p10k.zsh'
-alias alacritty='code ~/.config/alacritty/alacritty.toml '
+alias alacritty='code ~/.config/alacritty/alacritty.toml'
 
 # PostgreSQL
 alias pgroot='psql -h 127.0.0.1 -U myuser -d postgres'
@@ -213,3 +212,6 @@ cd() {
     echo
   fi
 }
+
+source ~/powerlevel10k/powerlevel10k.zsh-theme
+source /home/linuxbrew/.linuxbrew/share/powerlevel10k/powerlevel10k.zsh-theme
